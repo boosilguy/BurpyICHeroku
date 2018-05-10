@@ -13,6 +13,7 @@ def inappropriate_access(request):
 
 def image_classification(request):
     # try-except의 주석
+    print(request)
     try:
         img_file = decode_json(request, 'image')
         result = inception_predict(img_file)
