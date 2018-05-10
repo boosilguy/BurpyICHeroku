@@ -9,6 +9,7 @@ from predict.needs.exception import *
 
 
 def inappropriate_access(request):
+    print("여기가 바로 로그다!")
     print(request)
     return render(request, 'inappropriate.html', {})
 
