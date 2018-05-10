@@ -9,6 +9,7 @@ from predict.needs.exception import *
 
 
 def inappropriate_access(request):
+    print(request)
     return render(request, 'inappropriate.html', {})
 
 def image_classification(request):
