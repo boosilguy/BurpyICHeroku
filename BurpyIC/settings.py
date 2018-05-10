@@ -43,7 +43,7 @@ SECRET_KEY = get_secret("SECRET_KEY")
 DEBUG = False
 
 # Heroku Web Setting
-ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
