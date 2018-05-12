@@ -9,12 +9,13 @@ from predict.needs.exception import *
 
 
 def inappropriate_access(request):
-    print("여기가 바로 로그다!")
+    print("여기가 바로 로그다! 바로 로그란 말이당!")
     print(request)
     return render(request, 'inappropriate.html', {})
 
 def image_classification(request):
     # try-except의 주석
+    print("여기가 바로 로그다! 바로 로그란 말이당!")
     print(request)
     try:
         img_file = decode_json(request, 'image')
