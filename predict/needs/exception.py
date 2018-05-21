@@ -4,7 +4,7 @@ import traceback
 def config_except_info():
     e_type, e_value, e_traceback = sys.exc_info()
     
-    # Extract stack traces as tuples
+    # 오류 스택을 리스트로 추출
     e_traceback = traceback.extract_tb(e_traceback)
 
     stack_trace = list()
@@ -25,9 +25,8 @@ def config_except_info():
     return exception
 
 def print_except_info(dict):
-    print("======================= Error =======================")
-    print("Exception type - %s" % dict["Exception type"])
-    print("Exception message - %s" % dict["Exception message"])
-    print("Stack trace - %s" % dict["Stack trace"])
-    print("=====================================================")
-    
+    print(" ")
+    print(" Exception type - %s" % dict["Exception type"])
+    print(" Exception message - %s" % dict["Exception message"])
+    print(" Stack trace - %s" % dict["Stack trace"])
+    print(" ")

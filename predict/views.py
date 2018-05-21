@@ -9,13 +9,11 @@ from predict.needs.exception import *
 
 
 def inappropriate_access(request):
-    print("여기가 바로 로그다! 바로 로그란 말이당!")
     print(request)
     return render(request, 'inappropriate.html', {})
 
 def image_classification(request):
     # try-except의 주석
-    print("여기가 바로 로그다! 바로 로그란 말이당!")
     print(request)
     try:
         img_file = decode_json(request, 'image')
@@ -29,48 +27,3 @@ def image_classification(request):
         result = encode_json(except_info)
     
     return JsonResponse(result, safe=False)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-    im = request.FILES.get('file')
-    name = im.name
-
-    # Use the following code if you want to store in the MEDIA path.
-    
-    print(type(im))
-    dir = MEDIA_ROOT + '/'+ name
-    
-    with open(dir, 'wb+') as dest:
-        for chunk in im.chunks():
-            dest.write(chunk)
-    
-    # Process and save the image.
-    image = Image.open(im)
-    image = pd.imageProcess(image)
-    saveimg(image, name)
-
-    # Image datalization.
-    data = pd.datalization(image)
-    result = pd.CNNprediction(data)
-
-    print("Maybe... ", result)
-    return render(request, 'result.html', {'result':result, 'image':name})
-
-def saveimg(image, name):
-    # Save the image as a temporary measure.
-    path = os.path.join(MEDIA_ROOT, 'image')
-    image.save(os.path.join(path, name))
-"""
