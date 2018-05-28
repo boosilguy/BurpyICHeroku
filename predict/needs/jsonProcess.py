@@ -14,6 +14,6 @@ def encode_json(target):
     if len(target) != 0:
         result['result'] = target
     else:
-        e = Exception('dict\'s length is 0')
+        e = Exception('Result-dict\'s length is 0')
         raise e
     return result
