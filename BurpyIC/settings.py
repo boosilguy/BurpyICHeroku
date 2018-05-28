@@ -155,6 +155,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # model dir
 MODEL_DIR = os.path.join(BASE_DIR, 'model')
 
+# recommend dir
+REC_DIR = os.path.join(BASE_DIR, 'model', 'recommend')
+
 # Heroku DB Setting (sqlite3 -> PostgreSQL)
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
