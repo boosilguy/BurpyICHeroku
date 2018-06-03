@@ -1,1 +1,1 @@
-web: waitress-serve BurpyIC.wsgi:application
+web: waitress-serve --port=$PORT BurpyIC.wsgi:application
