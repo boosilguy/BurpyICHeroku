@@ -1,1 +1,1 @@
-web: gunicorn BurpyIC.wsgi
+web: waitress-serve BurpyIC.wsgi:application
