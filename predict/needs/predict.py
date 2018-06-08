@@ -31,7 +31,7 @@ def inception_predict(image):
             name = int(labels[i])
             rate = prediction[0][i] * 100
             result[name] = round(rate, 2)
-        result = process_result_dict(result, 5)
+        result = process_result_dict(result, 12)
         return result
     else:
         return None
