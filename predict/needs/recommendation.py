@@ -2,23 +2,26 @@ import tensorflow as tf
 import numpy as np
 import sys, os
 import json, csv
-from BurpyIC.settings import REC_DIR
+from BurpyIC.settings import REC_DIR, CATEGORY
 
 def save_train_data(payload):
     parsed = json.loads(payload.decode('utf-8'))
     user_id = parsed['id']
     products_data = parsed['data']
 
-    # 저장할 디렉토리 정의 및 생성
-    train_data_path = os.path.join(REC_DIR, user_id, 'train_data.csv')
-    os.makedirs(os.path.dirname(train_data_path), exist_ok=True)
+    # 전체 상품 목록을 카테고리 별 iterate
+    for c in products_data:
+        # 저장할 디렉토리 정의 및 생성
+        train_data_path = os.path.join(REC_DIR, user_id, CATEGORY[c['category']], 'train_data.csv')
+        os.makedirs(os.path.dirname(train_data_path), exist_ok=True)
 
-    # csv 파일 생성 및 데이터 입력
-    with open(train_data_path, 'w', newline='') as file:
-        writer = csv.writer(file)
-        for item in products_data:
-            row = [item['productId'], *item['avgTaste'], item['score']]
-            writer.writerow(row)
+        # csv 파일 생성 및 데이터 입력
+        with open(train_data_path, 'w', newline='') as file:
+            writer = csv.writer(file)
+            for item in c['items']:
+                row = [item['productId'], *item['avgTaste'], item['score']]
+                writer.writerow(row)
+
     return 'train data has saved'
 
 def save_predict_data(payload):
@@ -26,19 +29,22 @@ def save_predict_data(payload):
     user_id = parsed['id']
     products_data = parsed['data']
 
-    # 저장할 디렉토리 정의 및 생성
-    predict_data_path = os.path.join(REC_DIR, user_id, 'predict_data.csv')
-    os.makedirs(os.path.dirname(predict_data_path), exist_ok=True)
+    for c in products_data:
+        # 저장할 디렉토리 정의 및 생성
+        predict_data_path = os.path.join(REC_DIR, user_id, CATEGORY[c['category']], 'predict_data.csv')
+        os.makedirs(os.path.dirname(predict_data_path), exist_ok=True)
 
-    # csv 파일 생성 및 데이터 입력
-    with open(predict_data_path, 'w', newline='') as file:
-        writer = csv.writer(file)
-        for item in products_data:
-            row = [item['productId'], *item['avgTaste']]
-            writer. writerow(row)
+        # csv 파일 생성 및 데이터 입력
+        with open(predict_data_path, 'w', newline='') as file:
+            writer = csv.writer(file)
+            for item in c['items']:
+                row = [item['productId'], *item['avgTaste']]
+                writer. writerow(row)
+
     return 'predict data has saved'
 
-def train_recommendation(user_id):
+def train_recommendation(user_id, category):
+    tf.reset_default_graph() # 모델 초기화
     tf.set_random_seed(777) # 시드 지정
 
     # 학습 데이터 csv 읽기
@@ -95,42 +101,52 @@ def train_recommendation(user_id):
     
     return 'train has done'
 
-def predict_recommendation(user_id):
-    train_model_path = os.path.join(REC_DIR, user_id, 'trained_model.meta')
-    checkpoint_path = os.path.join(REC_DIR, user_id)
-    predict_data_path = os.path.join(REC_DIR, user_id, 'predict_data.csv')
+def predict_recommendation(user_id, category):
+    train_model_path = os.path.join(REC_DIR, user_id, category, 'trained_model.meta')
+    checkpoint_path = os.path.join(REC_DIR, user_id, category)
+    predict_data_path = os.path.join(REC_DIR, user_id, category, 'predict_data.csv')
     predict_result_path = os.path.join(REC_DIR, user_id, 'predict_result.txt')
     
-    # 저장된 모델 불러오기
-    sess = tf.Session()
-    saver = tf.train.import_meta_graph(train_model_path)
-    saver.restore(sess, tf.train.latest_checkpoint(checkpoint_path))
-    graph = tf.get_default_graph()
-    sess.run(tf.global_variables_initializer())
+    # 예측 세션
+    with tf.Session() as sess:
+        sess.run(tf.global_variables_initializer())
 
-    # 저장된 변수들 불러오기
-    ID = graph.get_tensor_by_name("ID:0")
-    X = graph.get_tensor_by_name("X:0")
-    Y = graph.get_tensor_by_name("Y:0")
-    W = graph.get_tensor_by_name("weight:0")
-    b = graph.get_tensor_by_name("bias:0")
-    hypothesis = tf.matmul(X, W) + b
+        # 저장된 모델 불러오기
+        saver = tf.train.import_meta_graph(train_model_path)
+        saver.restore(sess, tf.train.latest_checkpoint(checkpoint_path))
 
-    # 예측할 데이터 불러오기
-    data = np.loadtxt(predict_data_path, delimiter=",")
-    predict_ID, predict_X = data[:,0:1], data[:,1:]
+        # 저장된 변수들 불러오기
+        graph = tf.get_default_graph()
+        X = graph.get_tensor_by_name('X:0')
+        Y = graph.get_tensor_by_name('Y:0')
+        W = graph.get_tensor_by_name('weight:0')
+        b = graph.get_tensor_by_name('bias:0')
+        hypothesis = graph.get_tensor_by_name('hypo:0')
 
-    # 예측 수행
-    results = []
-    for product, tastes in zip(predict_ID, predict_X):
-        _product_ID, _score = sess.run([ID, hypothesis], feed_dict={ID: [product], X: [tastes]})
-        product_ID, score = np.squeeze(_product_ID).item(), np.squeeze(_score).item()
-        results.append({'id': product_ID, 'score': process_score(score)})
+        # 예측할 데이터 불러오기
+        data = np.loadtxt(predict_data_path, delimiter=',')
+        predict_ID, predict_X = data[:,0:1], data[:,1:]
 
-    # 예측 결과 저장 (json)
-    results = sorted(results, key=lambda i: i['score'], reverse=True)
+        # 예측 수행
+        resultItems = []
+        for product, tastes in zip(predict_ID, predict_X):
+            _score = sess.run(hypothesis, feed_dict={X: [tastes]})
+            product_ID, score = np.squeeze(product).item(), np.squeeze(_score).item()
+            resultItems.append({'id': int(product_ID), 'score': process_score(score)})
+
+        # 각 상품 평점 순으로 정렬
+        resultItems = sorted(resultItems, key=lambda i: i['score'], reverse=True)
+
+    # 기존 결과가 존재하면 load
+    contents = {}
+    if os.path.exists(predict_result_path):
+        with open(predict_result_path, 'r') as file:
+            contents = json.load(file)
+
+    # 파일에 현재 분류의 예측 결과를 작성
     with open(predict_result_path, 'w', newline='') as file:
-        json.dump(results, file)
+        contents[category] = resultItems
+        json.dump(contents, file)
 
     return 'predict has done'
 

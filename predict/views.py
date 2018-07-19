@@ -38,9 +38,10 @@ def on_recommend_train_data(request):
 
 def on_recommend_train(request):
     user_list = json.loads(request.body.decode("utf-8"))
+
     for user in user_list:
-        print(user)
-        result = train_recommendation(user['_id'])
+        for category in user['trainable']:
+            result = train_recommendation(user['id'], CATEGORY[category])
     
     result = encode_json(result)
     return JsonResponse(result, safe=False)
@@ -52,14 +53,16 @@ def on_recommend_predict_data(request):
 
 def on_recommend_predict(request):
     user_list = json.loads(request.body.decode("utf-8"))
-    for user in user_list:
-        result = predict_recommendation(user['_id'])
     
+    for user in user_list:
+        for category in user['trainable']:
+            result = predict_recommendation(user['id'], CATEGORY[category])
+        
     result = encode_json(result)
     return JsonResponse(result, safe=False)
 
 def on_recommend_predict_result(request):
-    user_id = request.body.decode("utf-8")
+    user_id = json.loads(request.body.decode("utf-8"))
     result = fetch_predict_result(user_id)
     result = encode_json(result)
     return JsonResponse(result, safe=False)
