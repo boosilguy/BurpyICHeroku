@@ -17,3 +17,13 @@ def encode_json(target):
         e = Exception('Result-dict\'s length is 0')
         raise e
     return result
+
+# encode Json
+def encode_json_new(target):
+    if len(target) != 0:
+        result = target
+    else:
+        e = Exception('dict\'s length is 0')
+        raise e
+    result_string = json.dumps(result)
+    return result_string

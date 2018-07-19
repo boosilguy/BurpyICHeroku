@@ -33,7 +33,7 @@ def image_classification(request):
 
 def on_recommend_train_data(request):
     result = save_train_data(request.body)
-    result = encode_json(result)
+    result = encode_json_new(result)
     return JsonResponse(result, safe=False)
 
 def on_recommend_train(request):
@@ -43,12 +43,12 @@ def on_recommend_train(request):
         for category in user['trainable']:
             result = train_recommendation(user['id'], CATEGORY[category])
     
-    result = encode_json(result)
+    result = encode_json_new(result)
     return JsonResponse(result, safe=False)
 
 def on_recommend_predict_data(request):
     result = save_predict_data(request.body)
-    result = encode_json(result)
+    result = encode_json_new(result)
     return JsonResponse(result, safe=False)
 
 def on_recommend_predict(request):
@@ -58,11 +58,11 @@ def on_recommend_predict(request):
         for category in user['trainable']:
             result = predict_recommendation(user['id'], CATEGORY[category])
         
-    result = encode_json(result)
+    result = encode_json_new(result)
     return JsonResponse(result, safe=False)
 
 def on_recommend_predict_result(request):
     user_id = json.loads(request.body.decode("utf-8"))
     result = fetch_predict_result(user_id)
-    result = encode_json(result)
+    result = encode_json_new(result)
     return JsonResponse(result, safe=False)
