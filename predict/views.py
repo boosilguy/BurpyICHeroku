@@ -7,7 +7,7 @@ from predict.needs.predict import *
 from predict.needs.recommendation import *
 from predict.needs.jsonProcess import *
 from predict.needs.exception import * 
-
+from BurpyIC.settings import CATEGORY
 import json
 
 
