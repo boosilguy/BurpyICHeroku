@@ -84,11 +84,11 @@ def train_recommendation(user_id, category):
         threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
         # 학습 수행
-        for step in range(2001):
+        for step in range(501):
             ID_batch, x_batch, y_batch = sess.run([train_ID_batch, train_x_batch, train_y_batch])
             ID_val, cost_val, hy_val, _ = sess.run(
                 [ID, cost, hypothesis, train], feed_dict={ID: ID_batch, X: x_batch, Y: y_batch})
-            if step % 1000 == 0:
+            if step % 500 == 0:
                 print(step, "\nCost: ", cost_val, "\nIDs:\n", ID_val, "\nPrediction:\n", hy_val)
 
         # 모델 저장
