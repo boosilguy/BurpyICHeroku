@@ -84,7 +84,7 @@ def train_recommendation(user_id, category):
         threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
         # 학습 수행
-        for step in range(5001):
+        for step in range(2001):
             ID_batch, x_batch, y_batch = sess.run([train_ID_batch, train_x_batch, train_y_batch])
             ID_val, cost_val, hy_val, _ = sess.run(
                 [ID, cost, hypothesis, train], feed_dict={ID: ID_batch, X: x_batch, Y: y_batch})
