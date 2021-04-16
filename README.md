@@ -34,6 +34,10 @@
 </ol>
 
 <h2>Behind Story</h2>
-<p>아무래도 Heroku 서버 규모가 Free Account이다보니, 매우... 
+<p>아무래도 Heroku 서버 규모가 Free Account이다보니, 서버 역할의 제한이 많았습니다. 기존 계획에는 모델 업데이트도 추가할 예정이었으나, Request만 받으면 서버가 버티질 못하고 뻗었습니다. 당시 프로젝트 마감 기간일 뿐더러, ACM VRST2018에 투고할 Short Paper를 준비하고 있어 클라우드 이전을 고려하지 못한게 아쉬움으로 남았습니다. 프론트-백엔드 프로그래밍이 미숙하기도 하여, 모델 업데이트는 수기로 업데이트하는 방향으로 프로젝트를 진행했습니다.</p>
+<p>모델의 Training Data는 Google Drive에서 관리하도록 설정하였습니다.</p>
+
+<h2>Check This</h2>
+<a href="
 서버에 Image Classification 앱을 만들었고, 이 앱에 학습된 Inception 모델을 설치하였다.
 해당 앱의 url로 이미지가 동봉된 UnityWebRequest가 전달되면, 모델은 Classification을 진행하여 나온 결과물을 Burpy Wiki App (Node.js)에 전달한다.</
