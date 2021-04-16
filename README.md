@@ -38,6 +38,4 @@
 <p>모델의 Training Data는 Google Drive에서 관리하도록 설정하였습니다.</p>
 
 <h2>Check This</h2>
-<a href="
-서버에 Image Classification 앱을 만들었고, 이 앱에 학습된 Inception 모델을 설치하였다.
-해당 앱의 url로 이미지가 동봉된 UnityWebRequest가 전달되면, 모델은 Classification을 진행하여 나온 결과물을 Burpy Wiki App (Node.js)에 전달한다.</
+<a href="https://github.com/boosilguy/Burpy">Burpy Unity App</a>
