@@ -24,6 +24,10 @@
 <h2>Detail</h2>
 <p>Django Web Framework로 서버를 구축하였으며, 이 서버에 Image Classification 앱을 구성했습니다.
 해당 앱에 Inception v3를 튜닝하여 학습시킨 모델을 인스톨하였습니다.</p>
-
+![Burpy Web Request Model](https://user-images.githubusercontent.com/30020288/115008260-def17e80-9ee5-11eb-87b3-c0491de9417f.png)
+<ol>
+  <li>Unity로부터 이미지 사진이 포함된 Request를 Image Classification의 URL로부터 수용합니다.</li>
+  <
+</ol>
 서버에 Image Classification 앱을 만들었고, 이 앱에 학습된 Inception 모델을 설치하였다.
 해당 앱의 url로 이미지가 동봉된 UnityWebRequest가 전달되면, 모델은 Classification을 진행하여 나온 결과물을 Burpy Wiki App (Node.js)에 전달한다.
